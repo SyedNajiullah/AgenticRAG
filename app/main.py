@@ -20,15 +20,15 @@ def root():
     return {"status": "Agentic RAG API is running"}
 
 @app.post("/chat", response_model=ChatResponse)
-async def chat_endpoint(request: ChatRequest):
+def chat_endpoint(request: ChatRequest):
     try:
         config = {"configurable": {"thread_id": request.thread_id}}
         initial_state = {"question": request.question}
         
-        with checkpointer:
-            checkpointer.setup()
+        with checkpointer as cp:
+            cp.setup()
 
-            chatbot = workflow.compile(checkpointer=checkpointer)
+            chatbot = workflow.compile(checkpointer=cp)
             res = chatbot.invoke(initial_state, config)["messages"][-1].content
             print("Ai res: ", res)
 
