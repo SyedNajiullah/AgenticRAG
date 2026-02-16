@@ -4,7 +4,9 @@ from mem0 import MemoryClient
 from dotenv import load_dotenv
 from .models import GreetingClassification, MemoryClassifcation, AnswerSatisfactionClassification
 
-load_dotenv("../.env")
+# Load .env from project root
+load_dotenv() 
+# Alternatively if running from inside app/llms: load_dotenv("../../.env")
 
 llm = ChatGroq(model="moonshotai/kimi-k2-instruct-0905")
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
