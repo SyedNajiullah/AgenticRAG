@@ -1,3 +1,7 @@
+import os
+from langchain_community.document_loaders.csv_loader import CSVLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
 def get_rag_docs():
     # loading
     all_docs = []
