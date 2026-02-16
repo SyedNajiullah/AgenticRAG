@@ -1,6 +1,7 @@
 import os
 from langchain_community.document_loaders.csv_loader import CSVLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from .llms.models import ChatState
 
 def get_rag_docs():
     # loading
@@ -16,6 +17,9 @@ def get_rag_docs():
     
     return texts
 
+def return_phase(state: ChatState):
+    """Routing function for check_relevence conditional edges"""
+    return state["phase"]
 
 COLLECTION_NAME = "project"
 memo_id = "naji"
