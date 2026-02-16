@@ -18,3 +18,4 @@ def get_rag_docs():
 
 
 COLLECTION_NAME = "project"
+memo_id = "naji"
