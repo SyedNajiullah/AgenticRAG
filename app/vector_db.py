@@ -1,3 +1,5 @@
+import os
+from .utils import get_rag_docs, COLLECTION_NAME
 from qdrant_client import QdrantClient
 from langchain_qdrant import QdrantVectorStore
 
