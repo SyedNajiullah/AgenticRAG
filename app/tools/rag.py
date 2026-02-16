@@ -1,4 +1,5 @@
-from .engine import vector_db
+from ..vector_db import vector_db
+from langchain.tools import tool
 
 @tool("vector_search", description="Search the device manuals and question answer database for relevant documents.")
 def vector_search(query: str):
