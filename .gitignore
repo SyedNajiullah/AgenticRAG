@@ -1,4 +1,11 @@
-my-venv/
-.env
+# --- Folders for Python's own use (don't push these) ---
 __pycache__/
-*.ipynb_checkpoints
+
+# --- Your local virtual environments (too large to push) ---
+my-venv/ 
+
+# --- Sensitive information (Keep your API keys private!) ---
+.env
+
+# --- Temporary files from Jupyter Notebooks ---
+.ipynb_checkpoints
