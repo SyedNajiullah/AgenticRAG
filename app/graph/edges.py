@@ -21,5 +21,3 @@ def create_graph():
     graph.add_edge("fall_back_llm", END)
 
     return graph
-
-create_graph()
