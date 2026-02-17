@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import Optional
 
 class ChatRequest(BaseModel):
     """Schema for incoming chat requests."""
