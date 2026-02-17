@@ -4,7 +4,7 @@ load_dotenv()
 
 from fastapi import FastAPI, HTTPException
 from langgraph.checkpoint.postgres import PostgresSaver
-from .schema.pydantic import ChatRequest, ChatResponse, ThreadHistoryResponse, ThreadRequest, Message
+from .schema.pydantic import ChatRequest, ChatResponse, ThreadHistoryResponse, ThreadRequest
 from .graph.edges import create_graph
 
 app = FastAPI(title="Agentic RAG API")
