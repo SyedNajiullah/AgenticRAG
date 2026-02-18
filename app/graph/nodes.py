@@ -100,18 +100,12 @@ def context_search(state: ChatState):
         - Do NOT use prior knowledge or make up facts.
         - Do NOT hallucinate.
         - Be concise, clear, and factual.
-      
-      Long Term Memory rules:
-        - Do consider long term memory when answering the question about user's personal details, preferences, project or hobbies or anuthing retreived from there.
-        - Make the answer user personalized from long term memory. 
+    
       Question:
         {state['question']}
 
       Context:
         {context_search}
-
-      Long Term Memory:
-        {state["ltm_context"]}
       """
 
     llm_res = llm.invoke(state["messages"] + [HumanMessage(content=prompt)]).content
@@ -163,6 +157,66 @@ def check_relevence(state: ChatState):
 
 def fall_back_llm(state: ChatState):
     print("fallback node started")
+
+    if len(state["rag_context"]) == 0 or len(state["web_context"]) == 0: # planning --> fall back llm node
+      prompt = f"""
+
+        If the question is knowledge based then: 
+
+        Answer the following question using your knowledge.
+        Do NOT use tools.
+        Keep the answer high-level, educational and professional.
+        Do consider long term memory when asking the question.
+
+        OR if the question is greetings based then: 
+
+        Long Term Memory rules:
+            - Do consider long term memory when answering the question about user's personal details, preferences, project or hobbies or anuthing retreived from there.
+            - Make the answer user personalized from long term memory. 
+
+        Answer the greetings of the user formally. Don't ever change your tone.
+
+        Question: {state['question']}
+        Long Term Memory: {state["ltm_context"]}
+      """
+    else: # planning --> context search --> web search --> fall back llm
+      prompt = f"""
+
+        If the question is knowledge based then: 
+
+        Answer the following question using your knowledge.
+        Do NOT use tools.
+        Keep the answer high-level, educational and professional.
+        Do consider long term memory when asking the question.
+
+        OR if the question is greetings based then: 
+
+        Answer the greetings of the user formally. Don't ever change your tone.
+
+        Question: {state['question']}
+      """  
+
+    answer = llm.invoke(state["messages"] + [HumanMessage(content=prompt)]).content
+
+    interaction = [
+        {
+            "role": "user",
+            "content": state["question"]
+        },
+        {
+            "role": "assistant", 
+            "content": answer
+        }
+    ]
+
+    result = mem0.add(interaction, user_id=memo_id)
+
+    print("fall back node finished")
+    return {
+        "messages": [AIMessage(content=answer)],
+        "phase": "end"
+    }
+
     prompt = f"""
 
     If the question is knowledge based then: 
@@ -224,18 +278,11 @@ def web_search(state: ChatState):
         - Do NOT hallucinate.
         - Be concise, clear, and factual.
 
-      Long Term Memory rules:
-        - Do consider long term memory when answering the question about user's personal details, preferences, project or hobbies or anuthing retreived from there.
-        - Make the answer user personalized from long term memory. 
-
       Question:
         {state['question']}
 
       Context:
         {web_search}
-      
-      Long Term Memory:
-        {state["ltm_context"]}
       """
   
     llm_res = llm.invoke(state["messages"] + [HumanMessage(content=prompt)]).content
